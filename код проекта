@@ -2,7 +2,6 @@ import yfinance as yf
 import logging
 import io
 import matplotlib.pyplot as plt
-from datetime import datetime
 from telegram import (
     Update,
     InlineKeyboardButton,
@@ -65,76 +64,7 @@ LANGUAGES = {
         "help_risk": "⚠️ <b>Risk Help</b>\n\n/risk calculates stock volatility",
         "help_dividend": "💰 <b>Dividend Help</b>\n\n/dividend shows last 4 payments"
     },
-    "zh": {
-        "welcome": "📈 股票股息机器人\n输入 /help 查看命令",
-        "no_args": "请输入股票代码，例如: /dividend AAPL",
-        "fetching": "正在获取 {symbol} 数据...",
-        "no_data": "{symbol} 无股息数据",
-        "dividend_info": "🏦 公司: {name}\n💰 股价: {price}\n📈 股息率: {yield_pct}%\n\n最近股息:",
-        "chart_btn": "查看图表",
-        "error": "获取数据失败",
-        "lang_set": "语言已设置为中文",
-        "choose_lang": "选择语言:",
-        "portfolio_empty": "投资组合为空",
-        "portfolio_header": "📊 您的组合:\n",
-        "lesson_menu": "选择课程:",
-        "risk_info": "📊 {symbol} 风险\n波动率: {volatility:.2%}\n风险等级: {risk_level}",
-        "help_text": """📚 <b>帮助</b>
-
-<u>核心</u>
-/start - 显示欢迎
-/help - 本指南
-/language - 更改语言
-/dividend &lt;代码&gt; - 股息信息
-
-<u>组合</u>
-/add &lt;代码&gt; - 添加股票
-/portfolio - 查看组合
-
-<u>分析</u>
-/risk &lt;代码&gt; - 风险分析
-
-<u>教育</u>
-/learn - 投资课程""",
-        "help_portfolio": "📦 <b>组合帮助</b>\n\n/add 添加股票\n/portfolio 查看组合",
-        "help_risk": "⚠️ <b>风险帮助</b>\n\n/risk 计算股票波动率",
-        "help_dividend": "💰 <b>股息帮助</b>\n\n/dividend 显示最近4次支付"
-    },
-    "es": {
-        "welcome": "📈 Bot de Dividendos\nEscribe /help para ver comandos",
-        "no_args": "Ingrese un símbolo, ej: /dividend AAPL",
-        "fetching": "Obteniendo datos de {symbol}...",
-        "no_data": "{symbol} no tiene datos de dividendos",
-        "dividend_info": "🏦 Empresa: {name}\n💰 Precio: {price}\n📈 Rendimiento: {yield_pct}%\n\nDividendos recientes:",
-        "chart_btn": "Ver Gráfico",
-        "error": "Error al obtener datos",
-        "lang_set": "Idioma cambiado a español",
-        "choose_lang": "Elige idioma:",
-        "portfolio_empty": "Tu portfolio está vacío",
-        "portfolio_header": "📊 Tu Portfolio:\n",
-        "lesson_menu": "Elige una lección:",
-        "risk_info": "📊 Riesgo de {symbol}\nVolatilidad: {volatility:.2%}\nNivel: {risk_level}",
-        "help_text": """📚 <b>Ayuda</b>
-
-<u>Básico</u>
-/start - Mostrar bienvenida
-/help - Esta guía
-/language - Cambiar idioma
-/dividend &lt;símbolo&gt; - Info de dividendos
-
-<u>Portfolio</u>
-/add &lt;símbolo&gt; - Añadir acción
-/portfolio - Ver portfolio
-
-<u>Análisis</u>
-/risk &lt;símbolo&gt; - Análisis de riesgo
-
-<u>Educación</u>
-/learn - Lecciones de inversión""",
-        "help_portfolio": "📦 <b>Ayuda Portfolio</b>\n\n/add para añadir\n/portfolio para ver",
-        "help_risk": "⚠️ <b>Ayuda Riesgo</b>\n\n/risk calcula volatilidad",
-        "help_dividend": "💰 <b>Ayuda Dividendos</b>\n\n/dividend muestra últimos 4 pagos"
-    },
+    
     "ru": {
         "welcome": "📈 Бот дивидендов\nНапишите /help для команд",
         "no_args": "Введите тикер, например: /dividend AAPL",
@@ -180,29 +110,21 @@ LESSONS = {
     1: {
         "title": {
             "en": "📚 Lesson 1: Dividends Basics",
-            "zh": "📚 第一课: 股息基础",
-            "es": "📚 Lección 1: Conceptos básicos",
             "ru": "📚 Урок 1: Основы дивидендов"
         },
         "content": {
-            "en": "Dividends are company profit distributions...",
-            "zh": "股息是公司利润分配...",
-            "es": "Los dividendos son distribuciones de ganancias...",
-            "ru": "Дивиденды - это распределение прибыли..."
+            "en": "Dividend: A portion of a company’s profit paid to shareholders.",
+            "ru": "Дивиденды: часть прибыли компании, выплачиваемая акционерам."
         }
     },
     2: {
         "title": {
             "en": "📈 Lesson 2: Dividend Safety",
-            "zh": "📈 第二课: 股息安全性",
-            "es": "📈 Lección 2: Seguridad de dividendos",
             "ru": "📈 Урок 2: Безопасность дивидендов"
         },
         "content": {
-            "en": "Assess dividend safety using payout ratios...",
-            "zh": "使用派息率评估股息安全性...",
-            "es": "Evalúe la seguridad con ratios de pago...",
-            "ru": "Оцените безопасность через коэффициент выплат..."
+            "en": "Assess dividend safety using payout ratios.",
+            "ru": "Оцените безопасность через коэффициент выплат."
         }
     }
 }
@@ -222,8 +144,7 @@ async def set_language(update: Update, context: ContextTypes.DEFAULT_TYPE):
     lang = user_data.get(user_id, {}).get('language', 'en')
 
     buttons = [
-        ["English", "中文"],
-        ["Español", "Русский"]
+        ["English", "Русский"]
     ]
     await update.message.reply_text(
         LANGUAGES[lang]["choose_lang"],
@@ -234,7 +155,7 @@ async def set_language(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def handle_language(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Обработка выбора языка"""
     text = update.message.text
-    lang_map = {"English": "en", "中文": "zh", "Español": "es", "Русский": "ru"}
+    lang_map = {"English": "en", "Русский": "ru"}
 
     if text in lang_map:
         user_id = update.effective_user.id
@@ -428,11 +349,11 @@ async def analyze_risk(update: Update, context: ContextTypes.DEFAULT_TYPE):
         volatility = returns.std() * np.sqrt(252)
 
         if volatility > 0.3:
-            risk_level = "High" if lang == "en" else "高风险" if lang == "zh" else "Alto" if lang == "es" else "Высокий"
+            risk_level = "High" if lang == "en" else "Высокий"
         elif volatility > 0.15:
-            risk_level = "Medium" if lang == "en" else "中等风险" if lang == "zh" else "Medio" if lang == "es" else "Средний"
+            risk_level = "Medium" if lang == "en" else "Средний"
         else:
-            risk_level = "Low" if lang == "en" else "低风险" if lang == "zh" else "Bajo" if lang == "es" else "Низкий"
+            risk_level = "Low" if lang == "en" else "Низкий"
 
         await update.message.reply_text(
             LANGUAGES[lang]["risk_info"].format(
@@ -464,20 +385,14 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     keyboard = [
         [InlineKeyboardButton(
             "Portfolio Help" if lang == "en" else
-            "组合帮助" if lang == "zh" else
-            "Ayuda Portfolio" if lang == "es" else
             "Помощь по портфелю",
             callback_data="help_portfolio")],
         [InlineKeyboardButton(
             "Risk Help" if lang == "en" else
-            "风险帮助" if lang == "zh" else
-            "Ayuda Riesgo" if lang == "es" else
             "Помощь по риску",
             callback_data="help_risk")],
         [InlineKeyboardButton(
             "Dividend Help" if lang == "en" else
-            "股息帮助" if lang == "zh" else
-            "Ayuda Dividendos" if lang == "es" else
             "Помощь по дивидендам",
             callback_data="help_dividend")]
     ]
